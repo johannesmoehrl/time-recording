@@ -1,0 +1,112 @@
+<template>
+  <div class="wrapper">
+    <header>
+      <h1>Time Tracker</h1>
+      <div class="icons">
+        <i class="fa-solid fa-download"></i>
+        <i class="fa-solid fa-gear"></i>
+      </div>
+    </header>
+    <main>
+      <div class="searchbar">
+        <input type="text" id="search-name" placeholder="Search..." />
+        <input
+          type="text"
+          id="search-time"
+          placeholder="01.01.2024-01.02.2024"
+        />
+      </div>
+      <div v-for="user in users" :key="user.id" class="time-display">
+        <div class="name-work">
+          <p>John Doe</p>
+          <p>Worked on Appl...</p>
+        </div>
+        <div class="work-break">
+          <div class="work-time-total">
+            <p>7:30</p>
+          </div>
+          <div class="break-time">
+            <p>30min</p>
+          </div>
+        </div>
+        <div class="date-time">
+          <div class="date-time-work-time">
+            <p></p>
+          </div>
+          <p class="date">23.01.2024</p>
+        </div>
+      </div>
+    </main>
+    <button @click="openModal" class="add-btn">+</button>
+  </div>
+
+  <ModalView :isOpen="isModalOpened" @modal-close="closeModal"></ModalView>
+</template>
+
+<script setup>
+import ModalView from "./components/ModalView.vue";
+import { ref } from "vue";
+
+let users = [];
+
+const isModalOpened = ref(false);
+const openModal = () => {
+  isModalOpened.value = true;
+};
+
+const closeModal = () => {
+  isModalOpened.value = false;
+};
+</script>
+
+<style scoped>
+.wrapper {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header i {
+  font-size: 32px;
+  margin: 20px;
+  cursor: pointer;
+}
+
+.searchbar {
+  background-color: grey;
+  height: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.searchbar input {
+  width: 100%;
+  margin: 20px;
+}
+
+.time-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid black;
+}
+.add-btn {
+  cursor: pointer;
+  position: absolute;
+  left: 50%;
+  bottom: 15%;
+  transform: translateX(-50%);
+  border: none;
+  width: 50px;
+  height: 50px;
+  color: white;
+  background-color: black;
+  border-radius: 50%;
+  font-size: 20px;
+}
+</style>
