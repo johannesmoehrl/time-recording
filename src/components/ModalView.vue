@@ -4,15 +4,10 @@
       <h4>Add your Entry</h4>
       <div class="name-container">
         <label for="users">Name: </label>
-        <select name="users" id="users">
+        <select v-model="selectedUser" name="users" id="users">
           <option v-for="user in users" :key="user.id">{{ user.name }}</option>
         </select>
       </div>
-      <div class="additonal-info-container">
-        <label for="additional-info">Worked on: </label>
-        <input id="additional-info" type="text" />
-      </div>
-
       <div class="time-picker-container">
         <p>Start Time:</p>
         <VueDatePicker v-model="startTime"></VueDatePicker>
@@ -52,7 +47,6 @@ const emit = defineEmits(["modal-close"]);
 
 const startTime = ref();
 const endTime = ref();
-
 const users = ref([
   {
     id: Math.floor(Math.random() * 1000000),
@@ -65,15 +59,24 @@ const users = ref([
 ]);
 
 class User {
-  constructor(id, name) {
-    (this.id = id), (this.name = name);
+  constructor(id, name, startTime, endTime, date) {
+    (this.id = id),
+      (this.name = name),
+      (this.startTime = startTime),
+      (this.endTime = endTime);
   }
 }
 
+const selectedUser = ref("");
 const createNewUser = () => {
-  let user = new User(Math.floor(Math.random() * 1000000));
-  localStorage.setItem("user", JSON.stringify(user));
-  console.log("hello");
+  let user = new User(
+    Math.floor(Math.random() * 1000000),
+    selectedUser.value,
+    startTime.value,
+    endTime.value,
+  );
+  let id = Math.floor(Math.random() * 1000000);
+  localStorage.setItem(`${id}`, JSON.stringify(user));
 };
 </script>
 

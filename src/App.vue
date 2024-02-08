@@ -18,22 +18,18 @@
       </div>
       <div v-for="user in users" :key="user.id" class="time-display">
         <div class="name-work">
-          <p>John Doe</p>
-          <p>Worked on Appl...</p>
+          <p>{{ user.value.name }}</p>
+          <p class="date">{{ new Date().toLocaleDateString("de-DE") }}</p>
         </div>
-        <div class="work-break">
-          <div class="work-time-total">
-            <p>7:30</p>
-          </div>
-          <div class="break-time">
-            <p>30min</p>
+        <div class="work-time">
+          <div class="work-time-start-end">
+            <p>{{ user.value.startTime }}</p>
+            <p>{{ user.value.endTime }}</p>
           </div>
         </div>
-        <div class="date-time">
-          <div class="date-time-work-time">
-            <p></p>
-          </div>
-          <p class="date">23.01.2024</p>
+        <div class="total-time">
+          <p>30min</p>
+          <p>09:00</p>
         </div>
       </div>
     </main>
@@ -45,18 +41,31 @@
 
 <script setup>
 import ModalView from "./components/ModalView.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
-let users = [];
-
+const users = ref([]);
 const isModalOpened = ref(false);
+
+const fetchAndUpdateUsers = () => {
+  let items = { ...localStorage };
+  users.value = Object.entries(items).map(([key, value]) => ({
+    key,
+    value: JSON.parse(value),
+  }));
+};
+
 const openModal = () => {
   isModalOpened.value = true;
 };
 
 const closeModal = () => {
   isModalOpened.value = false;
+  fetchAndUpdateUsers();
 };
+
+onMounted(() => {
+  fetchAndUpdateUsers();
+});
 </script>
 
 <style scoped>
