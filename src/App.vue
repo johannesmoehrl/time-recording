@@ -16,20 +16,23 @@
           placeholder="01.01.2024-01.02.2024"
         />
       </div>
-      <div v-for="user in users" :key="user.id" class="time-display">
+      <div v-for="(user, index) in users" :key="user.id" class="time-display">
         <div class="name-work">
           <p>{{ user.value.name }}</p>
           <p class="date">{{ new Date().toLocaleDateString("de-DE") }}</p>
         </div>
         <div class="work-time">
           <div class="work-time-start-end">
-            <p>{{ user.value.startTime }}</p>
-            <p>{{ user.value.endTime }}</p>
+            <p>
+              {{ new Date(user.value.startTime).toLocaleTimeString("de-DE") }}
+            </p>
+            <p>
+              {{ new Date(user.value.endTime).toLocaleTimeString("de-DE") }}
+            </p>
           </div>
         </div>
         <div class="total-time">
-          <p>30min</p>
-          <p>09:00</p>
+          <p>Total Work Time: {{ formattedTimeDiff[index] }}</p>
         </div>
       </div>
     </main>
@@ -45,6 +48,7 @@ import { ref, onMounted } from "vue";
 
 const users = ref([]);
 const isModalOpened = ref(false);
+const formattedTimeDiff = ref([]);
 
 const fetchAndUpdateUsers = () => {
   let items = { ...localStorage };
@@ -52,6 +56,33 @@ const fetchAndUpdateUsers = () => {
     key,
     value: JSON.parse(value),
   }));
+  formattedTimeDiff.value = [];
+
+  for (let user of users.value) {
+    const startTimeDateObject = new Date(user.value.startTime);
+    const endTimeDateObject = new Date(user.value.endTime);
+
+    const timeDifferenceInMilliseconds =
+      endTimeDateObject - startTimeDateObject;
+
+    // Convert milliseconds to seconds
+    const timeDifferenceInSeconds = timeDifferenceInMilliseconds / 1000;
+    const formattedTimeDiffValue = formatTime(timeDifferenceInSeconds);
+    formattedTimeDiff.value.push(formattedTimeDiffValue);
+  }
+
+  function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+
+    const formattedTime =
+      (hours > 0 ? hours + "h " : "") +
+      (minutes > 0 ? minutes + "min " : "") +
+      (remainingSeconds > 0 ? remainingSeconds + "s" : "");
+
+    return formattedTime;
+  }
 };
 
 const openModal = () => {

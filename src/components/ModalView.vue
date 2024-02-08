@@ -59,7 +59,7 @@ const users = ref([
 ]);
 
 class User {
-  constructor(id, name, startTime, endTime, date) {
+  constructor(id, name, startTime, endTime) {
     (this.id = id),
       (this.name = name),
       (this.startTime = startTime),
@@ -73,7 +73,7 @@ const createNewUser = () => {
     Math.floor(Math.random() * 1000000),
     selectedUser.value,
     startTime.value,
-    endTime.value,
+    endTime.value
   );
   let id = Math.floor(Math.random() * 1000000);
   localStorage.setItem(`${id}`, JSON.stringify(user));
